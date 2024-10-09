@@ -16,6 +16,8 @@ context('Exercicio - Testes End-to-end - Fluxo de pedido', () => {
   });
 
   it('Deve fazer um pedido na loja Ebac Shop de ponta a ponta', () => {
+    var checkout = '#cart > .dropdown-menu > .widget_shopping_cart_content > .mini_cart_content > .mini_cart_inner > .mcart-border > .buttons > .checkout'
+
     cy.fixture('produtos').then(dados => {
      produtosPage.buscarProduto(dados[0].nomeProduto)
      produtosPage.addProdutoCarrinho(
@@ -24,7 +26,7 @@ context('Exercicio - Testes End-to-end - Fluxo de pedido', () => {
          dados[0].quantidade)
      cy.get('.woocommerce-message').should('contain' , dados[0].nomeProduto)
      cy.get('#cart > .dropdown-toggle').click()
-     cy.get('#cart > .dropdown-menu > .widget_shopping_cart_content > .mini_cart_content > .mini_cart_inner > .mcart-border > .buttons > .checkout').click()
+     cy.get(checkout).click()
      cy.get('#billing_first_name').type(fakerPT_BR.person.firstName())
      cy.get('#billing_last_name').type(fakerPT_BR.person.lastName())
      cy.get('#billing_address_1').type(fakerPT_BR.location.streetAddress())
@@ -36,6 +38,7 @@ context('Exercicio - Testes End-to-end - Fluxo de pedido', () => {
      cy.get('#account_password').type(fakerPT_BR.internet.password())
      cy.get('#terms').click()
      cy.get('#place_order').click()
+     cy.get('.woocommerce-notice').should('contain.text' , 'Seu pedido foi recebido.')
     });
     })
 
